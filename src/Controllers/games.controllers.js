@@ -3,6 +3,7 @@ import { db } from "../Database/database.js"
 export async function getGames(req, res) {
     try {
         const games = await db.query(`SELECT * FROM games`)
+        //const games = await db.query(`Delete FROM games`)
         res.send(games.rows)
     } catch (err) {
         res.status(500).send(err.message)
@@ -11,11 +12,14 @@ export async function getGames(req, res) {
 
 export async function postGames(req, res) {
     const { name, image, stockTotal, pricePerDay } = req.body
+
+    const price = Number(pricePerDay)
+
     try {
         const games = await db.query(`
         INSERT INTO games (name, image, stockTotal, pricePerDay)
         VALUES ($1, $2, $3, $4);`
-            , [name, image, stockTotal, pricePerDay])
+            , [name, image, stockTotal, price])
         res.sendStatus(200)
     } catch (err) {
         res.status(500).send(err.message)
