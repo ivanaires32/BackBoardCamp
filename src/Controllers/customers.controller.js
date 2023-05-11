@@ -33,6 +33,7 @@ export async function putCustomerId(req, res) {
             UPDATE customers SET name='${name}' 
             WHERE id=$1;
         `, [id])
+
         res.sendStatus(200)
     } catch (err) {
         res.status(500).send(err.message)
