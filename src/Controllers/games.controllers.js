@@ -24,7 +24,7 @@ export async function postGames(req, res) {
 
         await db.query(`
         INSERT INTO games (name, image, stockTotal, pricePerDay)
-            VALUES ('${name}', '${image}', ${stockTotal}, ${pricePerDay});`
+            VALUES ('${name}', '${image}', '${stockTotal}', '${pricePerDay}');`
         )
         res.sendStatus(201)
     } catch (err) {
