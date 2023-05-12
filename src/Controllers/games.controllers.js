@@ -23,8 +23,8 @@ export async function postGames(req, res) {
         if (conflit.rows[0]) return res.status(409).send("Jogo ja cadastrada")
 
         await db.query(`
-        INSERT INTO games (name, stockTotal, pricePerDay, image)
-            VALUES ('${name}', ${stockTotal}, ${pricePerDay}, '${image}');`
+        INSERT INTO games (name, image, stockTotal, pricePerDay)
+            VALUES ('${name}', '${image}', ${stockTotal}, ${pricePerDay});`
         )
         res.sendStatus(201)
     } catch (err) {

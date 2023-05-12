@@ -42,7 +42,12 @@ export async function putCustomerId(req, res) {
 
 export async function postCustomer(req, res) {
     const { name, phone, cpf, birthday } = req.body
+
     try {
+
+        if (isNaN(cpf)) return res.status(400).send("CPF invalido")
+
+        if (isNaN(phone)) return res.status(400).send("Telefone invalido")
 
         const conflit = await db.query(`
             SELECT * FROM customers WHERE cpf='${cpf}'
