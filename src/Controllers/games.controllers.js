@@ -13,7 +13,6 @@ export async function getGames(req, res) {
 export async function postGames(req, res) {
     const { name, image, stockTotal, pricePerDay } = req.body
 
-    const price = Number(pricePerDay)
 
     try {
         const conflit = await db.query(
@@ -25,7 +24,7 @@ export async function postGames(req, res) {
 
         await db.query(`
         INSERT INTO games (name, image, stockTotal, pricePerDay)
-            VALUES ('${name}', '${image}', '${stockTotal}', '${price}');`
+            VALUES ('${name}', '${image}', ${stockTotal}, ${pricePerDay});`
         )
         res.sendStatus(201)
     } catch (err) {
