@@ -9,20 +9,11 @@ export async function getCustomer(req, res) {
         const users = await db.query(`
             SELECT * FROM customers;
         `)
-
-        const newArray = []
-
-        for (let i = 0; i < users.rows.length; i++) {
-            const dateFormat = users.rows[i].birthday
-            const obj = {
-                name: users.rows[i].name,
-                phone: users.rows[i].phone,
-                cpf: users.rows[i].cpf,
-                birthday: dayjs(dateFormat).format('YYYY-MM-DD')
-            }
-            newArray.push(obj)
-        }
-        res.status(200).send(newArray)
+        users.rows = users.rows.map(u => ({
+            ...u,
+            birthday: new Date(u.birthday).toISOString().split('T')[0]
+        }))
+        res.status(200).send(users.rows)
     } catch (err) {
         res.status(500).send(err.message)
     }
