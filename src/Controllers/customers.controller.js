@@ -1,4 +1,5 @@
 import { db } from "../Database/database.js"
+import dayjs from "dayjs"
 
 export async function getCustomer(req, res) {
     try {
@@ -42,7 +43,6 @@ export async function putCustomerId(req, res) {
 
 export async function postCustomer(req, res) {
     const { name, phone, cpf, birthday } = req.body
-
     try {
 
         if (isNaN(cpf)) return res.status(400).send("CPF invalido")
