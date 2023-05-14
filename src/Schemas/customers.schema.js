@@ -1,11 +1,9 @@
-import JoiBase from "joi"
-import JoiDate from "@joi/date"
+import joi from "joi"
 
-const Joi = JoiBase.extend(JoiDate);
 
-export const customersSchema = Joi.object({
-    name: Joi.string().required(),
-    phone: Joi.string().min(10).max(11).required(),
-    cpf: Joi.string().min(11).max(11).required(),
-    birthday: Joi.date().format("YYYY-MM-DD")
+export const customersSchema = joi.object({
+    name: joi.string().required(),
+    phone: joi.string().min(10).max(11).required(),
+    cpf: joi.string().min(11).max(11).required(),
+    birthday: joi.string().pattern(/^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$/).required()
 })
