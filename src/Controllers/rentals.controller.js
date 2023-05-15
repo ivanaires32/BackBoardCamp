@@ -86,7 +86,7 @@ export async function returnRentals(req, res) {
 
         if (exst.rows.length === 0) return res.sendStatus(404)
 
-        if (exst.rows[0].returnDate === null) return res.sendStatus(400)
+        if (exst.rows[0].returnDate !== null) return res.sendStatus(400)
 
         const diaAtual = dayjs()
         const buyDay = await db.query(`
@@ -111,6 +111,10 @@ export async function returnRentals(req, res) {
             UPDATE rentals SET "delayFee"=${(originalPrice.rows[0].originalPrice) * delay}
             WHERE id=$1;
         `, [id])
+        } else {
+            await db.query(`
+                UPDATE rentals SET "delayFee"=0 WHERE id=$1;
+                `, [id])
         }
 
         res.sendStatus(200)
@@ -129,7 +133,7 @@ export async function deleteRentals(req, res) {
 
         if (exst.rows.length === 0) return res.sendStatus(404)
 
-        if (exst.rows[0].returnDate !== null) return res.sendStatus(400)
+        if (exst.rows[0].returnDate === null) return res.sendStatus(400)
 
         await db.query(`
             DELETE FROM rentals WHERE id=$1;
