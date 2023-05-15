@@ -52,8 +52,27 @@ export async function putCustomerId(req, res) {
 
         if (!usuarioCadastrado) return res.status(404).send("Usuario não cadastrado")
 
+        const conflit = await db.query(`
+            SELECT * FROM customers WHERE cpf='${cpf}'
+        ;`)
+
+        if (conflit.rows.length > 0) return res.status(409).send("CPF já cadastrado")
+
         await db.query(`
-            UPDATE customers SET name='${name}', phone='${phone}, cpf='${cpf}, birthday='${birthday}'
+            UPDATE customers SET name='${name}'
+            WHERE id=$1;
+        `, [id])
+        await db.query(`
+            UPDATE customers SET phone='${phone}'
+            WHERE id=$1;
+        `, [id])
+        await db.query(`
+            UPDATE customers SET cpf='${cpf}'
+            WHERE id=$1;
+        `, [id])
+
+        await db.query(`
+            UPDATE customers SET birthday='${birthday}'
             WHERE id=$1;
         `, [id])
 

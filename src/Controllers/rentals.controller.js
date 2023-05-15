@@ -20,15 +20,25 @@ export async function postRentals(req, res) {
 
     try {
 
+        const nameCustomer = await db.query(`
+            SELECT name FROM customers WHERE id=${customerId}
+        `)
+
+        const nameGame = await db.query(`
+            SELECT name FROM games WHERE id=${gameId}
+        `)
+
         const priceGame = await db.query(`
             SELECT "pricePerDay" FROM games WHERE id=${gameId}
         `)
+        console.log(nameGame.rows[0])
 
         await db.query(`
             INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate",
-            "originalPrice", "delayFee", customer, game)
+            "originalPrice", "delayFee", "customer", game)
             VALUES ('${customerId}','${gameId}','${dayjs().format('YYYY-MM-DD')}',
-            '${daysRented}','2000-02-03,'${daysRented * priceGame}','2')    
+            '${daysRented}','2000-02-03',${daysRented * priceGame.rows[0].pricePerDay},2, 
+            '${nameCustomer.rows[0].name}', ${nameGame.rows[0].name})    
         ;`)
 
         res.statusSend(201)
