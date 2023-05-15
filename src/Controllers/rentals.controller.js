@@ -55,7 +55,7 @@ export async function postRentals(req, res) {
             SELECT * FROM rentals WHERE "gameId"=${gameId}
         `)
 
-        if (disponivel.rows.length > games.rows[0].stockTotal) return res.sendStatus(400)
+        if (disponivel.rows.length >= games.rows[0].stockTotal) return res.sendStatus(400)
 
         const priceGame = await db.query(`
             SELECT "pricePerDay" FROM games WHERE id=${gameId}
