@@ -80,6 +80,14 @@ export async function returnRentals(req, res) {
     const { id } = req.params
     try {
 
+        const exst = await db.query(`
+            SELECT * FROM rentals WHERE id=$1
+        `, [id])
+
+        if (exst.rows.length === 0) return res.sendStatus(404)
+
+        if (exst.rows[0].returnDate !== null) return res.sendStatus(400)
+
         const diaAtual = dayjs()
         const buyDay = await db.query(`
             SELECT "rentDate" FROM rentals WHERE id=$1;
@@ -89,18 +97,20 @@ export async function returnRentals(req, res) {
 
         const delay = Number(diaAtual.format('DD-MM-YYYY')[0] + diaAtual.format('DD-MM-YYYY')[1]) - Number(d[0] + d[1])
 
-        const originalPrice = await db.query(`
+        if (delay > 0) {
+            const originalPrice = await db.query(`
             SELECT "originalPrice" FROM rentals WHERE id=$1;
         `, [id])
-        await db.query(`
+            await db.query(`
             UPDATE rentals SET "returnDate"='${diaAtual.format('YYYY-MM-DD')}'
             WHERE id=$1;
         `, [id])
 
-        await db.query(`
+            await db.query(`
             UPDATE rentals SET "delayFee"=${delay * originalPrice.rows[0].originalPrice}
             WHERE id=$1;
         `, [id])
+        }
 
         res.sendStatus(200)
     } catch (err) {
