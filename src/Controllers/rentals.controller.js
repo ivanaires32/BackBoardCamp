@@ -101,7 +101,6 @@ export async function returnRentals(req, res) {
             SELECT "originalPrice" FROM rentals WHERE id=$1;
         `, [id])
         if (delay > 0) {
-
             await db.query(`
             UPDATE rentals SET "returnDate"='${diaAtual.format('YYYY-MM-DD')}'
             WHERE id=$1;
@@ -113,7 +112,7 @@ export async function returnRentals(req, res) {
         `, [id])
         } else {
             await db.query(`
-                UPDATE rentals SET "delayFee"= 0 WHERE id=$1;
+                UPDATE rentals SET "delayFee"=${null} WHERE id=$1;
                 `, [id])
         }
 
