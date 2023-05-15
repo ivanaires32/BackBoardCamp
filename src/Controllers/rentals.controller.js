@@ -25,9 +25,10 @@ export async function postRentals(req, res) {
         `)
 
         await db.query(`
-            INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
+            INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate",
+            "originalPrice", "delayFee", customer, game)
             VALUES ('${customerId}','${gameId}','${dayjs().format('YYYY-MM-DD')}',
-            '${daysRented}',3,'${daysRented * priceGame}',2)    
+            '${daysRented}','2000-02-03,'${daysRented * priceGame}','2')    
         ;`)
 
         res.statusSend(201)

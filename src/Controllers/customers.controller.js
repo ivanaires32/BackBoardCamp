@@ -27,6 +27,11 @@ export async function getCustomerId(req, res) {
         `, [id])
 
         if (!user.rows[0]) return res.sendStatus(404)
+
+        user.rows = user.rows.map(u => ({
+            ...u,
+            birthday: new Date(u.birthday).toISOString().split('T')[0]
+        }))
         res.status(200).send(user.rows[0])
     } catch (err) {
         res.status(500).send(err.message)
