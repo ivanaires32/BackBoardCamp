@@ -75,3 +75,35 @@ export async function postRentals(req, res) {
     }
 
 }
+
+export async function returnRentals(req, res) {
+    const { id } = req.params
+    try {
+
+        const diaAtual = dayjs()
+        const buyDay = await db.query(`
+            SELECT "rentDate" FROM rentals WHERE id=$1;
+        `, [id])
+
+        const d = dayjs(buyDay.rows[0].rentDate).format('DD-MM-YYYY')
+
+        const delay = Number(diaAtual.format('DD-MM-YYYY')[0] + diaAtual.format('DD-MM-YYYY')[1]) - Number(d[0] + d[1])
+
+        const originalPrice = await db.query(`
+            SELECT "originalPrice" FROM rentals WHERE id=$1;
+        `, [id])
+        await db.query(`
+            UPDATE rentals SET "returnDate"='${diaAtual.format('YYYY-MM-DD')}'
+            WHERE id=$1;
+        `, [id])
+
+        await db.query(`
+            UPDATE rentals SET "delayFee"=${delay * originalPrice.rows[0].originalPrice}
+            WHERE id=$1;
+        `, [id])
+
+        res.sendStatus(200)
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
