@@ -8,10 +8,38 @@ export async function getRentals(req, res) {
             SELECT * FROM rentals
         `)
 
+        let clientAluguel
+        let gameAluguel
+
+        for (let i = 0; i < alugueis.rows.length; i++) {
+            const customerAluguel = await db.query(`
+               SELECT * FROM customers WHERE id=${alugueis.rows[i].customerId}
+            `)
+
+            if (customerAluguel) clientAluguel = customerAluguel
+        }
+
+        for (let i = 0; i < alugueis.rows.length; i++) {
+            const jogoAluguel = await db.query(`
+               SELECT * FROM games WHERE id=${alugueis.rows[i].gameId}
+            `)
+
+            if (jogoAluguel) gameAluguel = jogoAluguel
+        }
+
+        for (let i = 0; i < alugueis.rows.length; i++) {
+            alugueis.rows[i] = {
+                ...alugueis.rows[i],
+                customer: { id: clientAluguel.rows[0].id, name: clientAluguel.rows[0].name },
+                game: { id: gameAluguel.rows[0].id, name: gameAluguel.rows[0].name }
+            }
+
+        }
+
         res.send(alugueis.rows)
 
     } catch (err) {
-        res.staus(500).send(err.message)
+        res.status(500).send(err.message)
     }
 }
 
