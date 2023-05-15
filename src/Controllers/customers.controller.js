@@ -56,7 +56,7 @@ export async function putCustomerId(req, res) {
             SELECT * FROM customers WHERE cpf='${cpf}'
         ;`)
 
-        if (conflit.rows.length > 0 && conflit.rows[0].cpf !== cpf) return res.status(409).send("CPF já cadastrado")
+        if (conflit.rows.length > 0 && conflit.rows[0].name !== name) return res.status(409).send("CPF já cadastrado")
 
         await db.query(`
             UPDATE customers SET name='${name}'
