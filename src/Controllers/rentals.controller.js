@@ -93,9 +93,9 @@ export async function returnRentals(req, res) {
             SELECT "rentDate" FROM rentals WHERE id=$1;
         `, [id])
 
-        const d = dayjs(buyDay.rows[0].rentDate).format('DD-MM-YYYY')
+        const diaDaCompra = dayjs(buyDay.rows[0].rentDate).format('DD')
 
-        const delay = Number(diaAtual.format('DD-MM-YYYY')[0] + diaAtual.format('DD-MM-YYYY')[1]) - Number(d[0] + d[1])
+        const delay = Number(diaAtual.format('DD')) - Number(diaDaCompra)
 
         const originalPrice = await db.query(`
             SELECT "originalPrice" FROM rentals WHERE id=$1;
