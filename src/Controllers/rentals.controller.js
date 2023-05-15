@@ -113,7 +113,7 @@ export async function returnRentals(req, res) {
         `, [id])
         } else {
             await db.query(`
-                UPDATE rentals SET "delayFee"=0 WHERE id=$1;
+                UPDATE rentals SET "delayFee"= 0 WHERE id=$1;
                 `, [id])
         }
 
